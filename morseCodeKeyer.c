@@ -267,19 +267,20 @@ static void btn_task(void *pvParameters)
             TickType_t word_extra_ticks = pdMS_TO_TICKS(word_gap_ms - letter_gap_ms);
             btn_event_t next;
 
-            if (xQueueReceive(btn_queue, &next, letter_ticks) == pdTRUE) {
-                /* Next event arrived before letter gap expired */
-                if (next.timestamp_us - last_event_us < 40000)
-                    continue;  /* debounce */
-                last_event_us = next.timestamp_us;
+         if (xQueueReceive(btn_queue, &next, letter_ticks) == pdTRUE) {
+    if (next.timestamp_us - last_event_us < 40000)
+        continue;
+    last_event_us = next.timestamp_us;
 
-                if (next.type == EVT_PRESS) {
-                    press_start_us = next.timestamp_us;
-                    gpio_set_level(LED_PIN, 1);
-                    continue;  /* loop back to catch the release */
-                }
-                /* Spurious release — ignore and keep waiting */
-            } else {
+    if (next.type == EVT_PRESS) {
+        press_start_us = next.timestamp_us;
+        gpio_set_level(LED_PIN, 1);
+        continue;
+    }
+    /* Spurious release after letter gap — ignore and restart letter gap timer */
+    xQueueReset(btn_queue);  /* Clear any stale events */
+    continue;
+} else {
                 /* Letter gap expired → decode */
                 xSemaphoreTake(decode_mutex, portMAX_DELAY);
                 decode_current();
