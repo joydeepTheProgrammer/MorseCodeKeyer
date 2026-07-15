@@ -41,7 +41,8 @@
 ### Pinout Diagram
 
 ```
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/ee260a36-d096-46fe-95b6-f6615edb7ce0" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/63f1554d-1e26-4def-99bf-d11a7eb533da" />
+
 
 ```
 
