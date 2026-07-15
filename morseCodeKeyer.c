@@ -244,7 +244,7 @@ static void btn_task(void *pvParameters)
 
         if (evt.type == EVT_PRESS) {
             press_start_us = evt.timestamp_us;
-            gpio_set_level(LED_PIN, 1);          /* visual feedback */
+            gpio_set_level(LED_PIN, 1);
         }
         else if (evt.type == EVT_RELEASE && press_start_us > 0) {
             int duration_ms = (int)((evt.timestamp_us - press_start_us) / 1000);
@@ -267,20 +267,25 @@ static void btn_task(void *pvParameters)
             TickType_t word_extra_ticks = pdMS_TO_TICKS(word_gap_ms - letter_gap_ms);
             btn_event_t next;
 
-         if (xQueueReceive(btn_queue, &next, letter_ticks) == pdTRUE) {
-    if (next.timestamp_us - last_event_us < 40000)
-        continue;
-    last_event_us = next.timestamp_us;
+            if (xQueueReceive(btn_queue, &next, letter_ticks) == pdTRUE) {
+                /* Event arrived before letter gap expired */
+                if (next.timestamp_us - last_event_us < 40000)
+                    continue;
+                last_event_us = next.timestamp_us;
 
-    if (next.type == EVT_PRESS) {
-        press_start_us = next.timestamp_us;
-        gpio_set_level(LED_PIN, 1);
-        continue;
-    }
-    /* Spurious release after letter gap — ignore and restart letter gap timer */
-    xQueueReset(btn_queue);  /* Clear any stale events */
-    continue;
-} else {
+                /* CRITICAL FIX: Decode previous character BEFORE starting new one */
+                xSemaphoreTake(decode_mutex, portMAX_DELAY);
+                decode_current();
+                xSemaphoreGive(decode_mutex);
+
+                if (next.type == EVT_PRESS) {
+                    press_start_us = next.timestamp_us;
+                    gpio_set_level(LED_PIN, 1);
+                    continue;
+                }
+                /* Spurious release — ignore and go back to waiting */
+                continue;
+            } else {
                 /* Letter gap expired → decode */
                 xSemaphoreTake(decode_mutex, portMAX_DELAY);
                 decode_current();
@@ -297,6 +302,8 @@ static void btn_task(void *pvParameters)
                         gpio_set_level(LED_PIN, 1);
                         continue;
                     }
+                    /* Spurious release — ignore */
+                    continue;
                 } else {
                     /* Word gap expired → add space */
                     xSemaphoreTake(decode_mutex, portMAX_DELAY);
