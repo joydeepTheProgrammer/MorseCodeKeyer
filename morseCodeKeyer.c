@@ -134,13 +134,13 @@ static void init_gpio(void)
 {
     gpio_config_t io_conf = {0};
 
-    /* LED: output, no pull */
+    /* LED only — buzzer is managed by LEDC */
     io_conf.mode = GPIO_MODE_OUTPUT;
     io_conf.pin_bit_mask = (1ULL << LED_PIN);
     io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
     io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     io_conf.intr_type = GPIO_INTR_DISABLE;
-    gpio_config(&io_conf);
+    ESP_ERROR_CHECK(gpio_config(&io_conf));
     gpio_set_level(LED_PIN, 0);
 
     /* Button: input, pull-up, interrupt on any edge */
@@ -148,10 +148,10 @@ static void init_gpio(void)
     io_conf.pin_bit_mask = (1ULL << BTN_PIN);
     io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
     io_conf.intr_type = GPIO_INTR_ANYEDGE;
-    gpio_config(&io_conf);
+    ESP_ERROR_CHECK(gpio_config(&io_conf));
 
-    gpio_install_isr_service(0);
-    gpio_isr_handler_add(BTN_PIN, btn_isr, NULL);
+    ESP_ERROR_CHECK(gpio_install_isr_service(0));
+    ESP_ERROR_CHECK(gpio_isr_handler_add(BTN_PIN, btn_isr, NULL));
 }
 
 static void init_uart(void)
@@ -165,15 +165,14 @@ static void init_uart(void)
         .source_clk = UART_SCLK_DEFAULT,
     };
 
-    uart_driver_install(UART_PORT, BUF_SIZE * 2, BUF_SIZE * 2, 0, NULL, 0);
-    uart_param_config(UART_PORT, &cfg);
-    uart_set_pin(UART_PORT, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE,
-                 UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+    ESP_ERROR_CHECK(uart_driver_install(UART_PORT, BUF_SIZE * 2, BUF_SIZE * 2, 0, NULL, 0));
+    ESP_ERROR_CHECK(uart_param_config(UART_PORT, &cfg));
+    ESP_ERROR_CHECK(uart_set_pin(UART_PORT, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE,
+                                 UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 }
 
 static void init_buzzer(void)
 {
-    /* LEDC PWM for passive buzzer tone at 800 Hz */
     ledc_timer_config_t timer = {
         .speed_mode = LEDC_LOW_SPEED_MODE,
         .duty_resolution = LEDC_TIMER_13_BIT,
@@ -181,7 +180,7 @@ static void init_buzzer(void)
         .freq_hz = 800,
         .clk_cfg = LEDC_AUTO_CLK
     };
-    ledc_timer_config(&timer);
+    ESP_ERROR_CHECK(ledc_timer_config(&timer));
 
     ledc_channel_config_t channel = {
         .gpio_num = BUZZER_PIN,
@@ -192,7 +191,7 @@ static void init_buzzer(void)
         .duty = 0,
         .hpoint = 0
     };
-    ledc_channel_config(&channel);
+    ESP_ERROR_CHECK(ledc_channel_config(&channel));
 }
 
 /* ============================================================================
