@@ -47,9 +47,6 @@
 
 > **Active buzzer?** If your buzzer has a +/– label and makes sound when 3.3V is applied directly, it's active. Replace `tone_out()` with simple `gpio_set_level(BUZZER_PIN, 1/0)` and add `BUZZER_PIN` back into `init_gpio()` as an output.
 
----
-
-## Circuit
 
 | Wire Color | Connection |
 |------------|------------|
