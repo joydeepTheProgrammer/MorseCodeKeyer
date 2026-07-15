@@ -15,6 +15,7 @@
 #include "driver/uart.h"
 #include "driver/ledc.h"
 #include "esp_timer.h"
+#include "esp_err.h"
 
 /* ───────────────────────────────────────────────────────────────────────────
    HARDWARE PINS
