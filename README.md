@@ -41,35 +41,8 @@
 ### Pinout Diagram
 
 ```
-ESP32 DevKit
-┌─────────────────────────────────────────────────────────────┐
-│  EN        23 │                                             │
-│  GPIO 23   22 │                                             │
-│  GPIO 22   01 │ TX                                          │
-│  GPIO 01   03 │ RX                                          │
-│  GPIO 03   21 │                                             │
-│  GPIO 21   19 │                                             │
-│  GPIO 19   18 │                                             │
-│  GPIO 18    5 │─────[ Buzzer + ]────[ Buzzer - ]────GND     │
-│  GPIO 5    17 │                                             │
-│  GPIO 17   16 │                                             │
-│  GPIO 16    4 │─────[ Button ]──────GND                    │
-│  GPIO 4     2 │─────[ LED ]────[220Ω]────GND               │
-│  GPIO 2    15 │                                             │
-│  GPIO 15   13 │                                             │
-│  GPIO 13   12 │                                             │
-│  GPIO 12   14 │                                             │
-│  GPIO 14   27 │                                             │
-│  GPIO 27   26 │                                             │
-│  GPIO 26   25 │                                             │
-│  GPIO 25   33 │                                             │
-│  GPIO 33   32 │                                             │
-│  GPIO 32    9 │                                             │
-│  3.3V      10 │                                             │
-│  GND       11 │◄──────────────────────────────────────────┤
-│  5V        GND │                                             │
-│  GND       VIN │                                             │
-└─────────────────────────────────────────────────────────────┘
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/ee260a36-d096-46fe-95b6-f6615edb7ce0" />
+
 ```
 
 > **Active buzzer?** If your buzzer has a +/– label and makes sound when 3.3V is applied directly, it's active. Replace `tone_out()` with simple `gpio_set_level(BUZZER_PIN, 1/0)` and add `BUZZER_PIN` back into `init_gpio()` as an output.
