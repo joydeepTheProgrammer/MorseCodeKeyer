@@ -313,13 +313,3 @@ Pull requests welcome. For major changes, open an issue first to discuss.
 
 ---
 
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-## Acknowledgments
-
-- Morse timing based on the [Paris standard](https://en.wikipedia.org/wiki/Morse_code)
-- Built with [Espressif ESP-IDF](https://github.com/espressif/esp-idf)
