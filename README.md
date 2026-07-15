@@ -10,7 +10,7 @@
 
 - [Features](#features)
 - [Hardware](#hardware)
-- [Pinout Diagram](#Pinout Diagram)
+- [Pinout Diagram](#pinout-diagram)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
 - [How It Works](#how-it-works)
