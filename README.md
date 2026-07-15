@@ -1,6 +1,4 @@
-# dit-dah
-
-> ESP32 Morse Code transciever using native ESP-IDF APIs. Send text as Morse via LED/buzzer, or decode button taps back to text in real time.
+> ESP32 Morse Code Keyer using native ESP-IDF APIs. Send text as Morse via LED/buzzer, or decode button taps back to text in real time.
 
 [![ESP-IDF](https://img.shields.io/badge/ESP--IDF-v5.0+-blue.svg)](https://docs.espressif.com/projects/esp-idf/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
