@@ -40,8 +40,7 @@
 
 ### Pinout Diagram
 
-<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/06924828-94ae-45ab-9fd6-7ba24ec0d657" />
-
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/1755653f-5daf-4dc7-aeb4-60ea81ee4b52" />
 
 
 > **Active buzzer?** If your buzzer has a +/– label and makes sound when 3.3V is applied directly, it's active. Replace `tone_out()` with simple `gpio_set_level(BUZZER_PIN, 1/0)` and add `BUZZER_PIN` back into `init_gpio()` as an output.
@@ -49,8 +48,6 @@
 ---
 
 ## Circuit
-
-![Circuit Diagram](docs/circuit.svg)
 
 | Wire Color | Connection |
 |------------|------------|
