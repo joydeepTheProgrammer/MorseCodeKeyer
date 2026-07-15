@@ -44,7 +44,6 @@
 
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/1755653f-5daf-4dc7-aeb4-60ea81ee4b52" />
 
----
 
 | Wire Color | Connection |
 |------------|------------|
