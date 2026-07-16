@@ -67,7 +67,7 @@
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/dit-dah.git
+git clone https://github.com/joydeeptheprogrammer/dit-dah.git
 cd dit-dah
 
 # Set target (ESP32, ESP32-S3, ESP32-C3, etc.)
