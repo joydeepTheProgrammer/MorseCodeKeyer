@@ -155,23 +155,23 @@ Message: RL
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                         ESP32                               │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
-│  │  UART Task  │    │ Button Task │    │   ISR       │     │
-│  │   Core 0    │    │   Core 1    │    │  GPIO 4     │     │
-│  │             │    │             │    │             │     │
-│  │ Reads serial│    │ Decodes     │◄───│ Edge detect │     │
-│  │ → send Morse│    │ Morse queue │    │ 40ms debounce    │
-│  │             │    │ → text      │    │             │     │
-│  └──────┬──────┘    └──────┬──────┘    └─────────────┘     │
-│         │                  │                                 │
-│         ▼                  ▼                                 │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐      │
+│  │  UART Task  │    │ Button Task │    │   ISR       │      │
+│  │   Core 0    │    │   Core 1    │    │  GPIO 4     │      │
+│  │             │    │             │    │             │      │
+│  │ Reads serial│    │ Decodes     │◄───│ Edge detect │      │
+│  │ → send Morse│    │ Morse queue │    │ 40ms debounce      │
+│  │             │    │ → text      │    │             │      │
+│  └──────┬──────┘    └──────┬──────┘    └─────────────┘      │
+│         │                  │                                │ 
+│         ▼                  ▼                                │
 │  ┌─────────────┐    ┌─────────────┐                         │
 │  │  LEDC PWM   │    │   Mutex     │                         │
 │  │  GPIO 5     │    │  protects   │                         │
 │  │  800 Hz     │    │ decoded_msg │                         │
 │  └──────┬──────┘    └─────────────┘                         │
-│         │                                                    │
-│         ▼                                                    │
+│         │                                                   │
+│         ▼                                                   │
 │  ┌─────────────┐    ┌─────────────┐                         │
 │  │    LED      │    │   Buzzer    │                         │
 │  │   GPIO 2    │    │   GPIO 5    │                         │
