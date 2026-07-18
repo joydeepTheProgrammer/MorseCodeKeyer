@@ -16,7 +16,7 @@
 - [How It Works](#how-it-works)
 - [API Reference](#api-reference)
 - [Troubleshooting](#troubleshooting)
-- [License](#license) 
+- [MIT License](#mit-License) 
 ---
 
 ## Features
@@ -273,9 +273,6 @@ Pull requests welcome. For major changes, open an issue first to discuss.
 5. Open a Pull Request
 
 ---
-
-## License
-
 # MIT License
 
 Copyright (c) 2026 Joydeep Majumdar
