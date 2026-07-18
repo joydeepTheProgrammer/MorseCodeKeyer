@@ -276,7 +276,7 @@ Pull requests welcome. For major changes, open an issue first to discuss.
 
 # License
 
-Unless otherwise specified, all materials contained in this repository—including, but not limited to, software source code, firmware, hardware design files (such as schematics, PCB layouts, Gerber files, BOMs, and CAD models), documentation, configuration files, examples, and other supporting materials—are licensed under the MIT License.
+Unless otherwise noted, all software, firmware, hardware design files, and documentation in this repository are made available under the MIT License.
 
 The following is the official, unmodified MIT License.
 
