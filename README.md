@@ -16,7 +16,6 @@
 - [How It Works](#how-it-works)
 - [API Reference](#api-reference)
 - [Troubleshooting](#troubleshooting)
-- [License](#license)
 
 ---
 
