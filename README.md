@@ -16,7 +16,7 @@
 - [How It Works](#how-it-works)
 - [API Reference](#api-reference)
 - [Troubleshooting](#troubleshooting)
-- [MIT License](#mit-License) 
+- [License](#License) 
 ---
 
 ## Features
@@ -274,32 +274,41 @@ Pull requests welcome. For major changes, open an issue first to discuss.
 
 ---
 
-# MIT License
+# License
+
+Unless otherwise specified, the MIT License applies to all contents of this repository, including but not limited to:
+
+- Software source code
+- Firmware
+- Hardware design files (schematics, PCB layouts, Gerber files, BOMs, CAD files)
+- Documentation
+- Configuration files
+- Examples and supporting materials
+
+The following is the official, unmodified MIT License.
+
+---
+
+MIT License
 
 Copyright (c) 2026 Joydeep Majumdar
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software, hardware design files, and associated documentation
-(collectively, the "Materials"), to deal in the Materials without restriction,
-including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Materials, and to permit
-persons to whom the Materials are furnished to do so, subject to the following
-conditions:
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-## Disclaimer of Warranty
-
-THE SOFTWARE IS PROVIDED **"AS IS"**, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
-
-## Limitation of Liability
-
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR
-OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE
-OR OTHER DEALINGS IN THE SOFTWARE.
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ---
