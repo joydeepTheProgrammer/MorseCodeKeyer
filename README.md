@@ -282,8 +282,6 @@ PCB layouts, Gerber files, BOMs, CAD files), documentation, configuration
 files, examples, and supporting materials—is made available under the MIT
 License.
 
-The following is the official, unmodified MIT License.
-
 ---
 
 ## MIT License
