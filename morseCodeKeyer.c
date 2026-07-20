@@ -262,63 +262,85 @@ static void btn_task(void *pvParameters)
                 uart_write_bytes(UART_PORT, "-", 1);
             }
 
-            /* Wait for letter gap or next press */
-            TickType_t letter_ticks = pdMS_TO_TICKS(letter_gap_ms);
-            TickType_t word_extra_ticks = pdMS_TO_TICKS(word_gap_ms - letter_gap_ms);
+          process_cmd()
+            int64_t deadline_us = evt.timestamp_us + (letter_gap_ms * 1000);
             btn_event_t next;
+            bool new_press = false;
 
-            if (xQueueReceive(btn_queue, &next, letter_ticks) == pdTRUE) {
-                /* Event arrived before letter gap expired */
-                if (next.timestamp_us - last_event_us < 40000)
-                    continue;
-                last_event_us = next.timestamp_us;
+            while (esp_timer_get_time() < deadline_us) {
+                int64_t remaining_us = deadline_us - esp_timer_get_time();
+                TickType_t remaining_ticks = pdMS_TO_TICKS(remaining_us / 1000);
+                if (remaining_ticks == 0) remaining_ticks = 1;
 
-                /* CRITICAL FIX: Decode previous character BEFORE starting new one */
-                xSemaphoreTake(decode_mutex, portMAX_DELAY);
-                decode_current();
-                xSemaphoreGive(decode_mutex);
+                if (xQueueReceive(btn_queue, &next, remaining_ticks) == pdTRUE) {
+                    /* Debounce: ignore events < 40 ms apart */
+                    if (next.timestamp_us - last_event_us < 40000) {
+                        continue; /* Ignores bounce, stays in while loop */
+                    }
+                    last_event_us = next.timestamp_us;
 
-                if (next.type == EVT_PRESS) {
-                    press_start_us = next.timestamp_us;
-                    gpio_set_level(LED_PIN, 1);
-                    continue;
+                    /* Valid event received before letter gap expired */
+                    xSemaphoreTake(decode_mutex, portMAX_DELAY);
+                    decode_current();
+                    xSemaphoreGive(decode_mutex);
+
+                    if (next.type == EVT_PRESS) {
+                        press_start_us = next.timestamp_us;
+                        gpio_set_level(LED_PIN, 1);
+                        new_press = true;
+                        break; /* Exit while loop to handle new press */
+                    }
+                    /* If spurious release, loop continues waiting */
                 }
-                /* Spurious release — ignore and go back to waiting */
-                continue;
-            } else {
-                /* Letter gap expired → decode */
-                xSemaphoreTake(decode_mutex, portMAX_DELAY);
-                decode_current();
-                xSemaphoreGive(decode_mutex);
+            }
 
-                /* Wait extra time to see if it's a word gap */
-                if (xQueueReceive(btn_queue, &next, word_extra_ticks) == pdTRUE) {
-                    if (next.timestamp_us - last_event_us < 40000)
+            if (new_press) continue; /* Go to top of main while(1) */
+
+            /* Letter gap expired → decode */
+            xSemaphoreTake(decode_mutex, portMAX_DELAY);
+            decode_current();
+            xSemaphoreGive(decode_mutex);
+
+            /* Wait extra time to see if it's a word gap */
+            deadline_us = evt.timestamp_us + (word_gap_ms * 1000);
+            new_press = false;
+
+            while (esp_timer_get_time() < deadline_us) {
+                int64_t remaining_us = deadline_us - esp_timer_get_time();
+                TickType_t remaining_ticks = pdMS_TO_TICKS(remaining_us / 1000);
+                if (remaining_ticks == 0) remaining_ticks = 1;
+
+                if (xQueueReceive(btn_queue, &next, remaining_ticks) == pdTRUE) {
+                    if (next.timestamp_us - last_event_us < 40000) {
                         continue;
+                    }
                     last_event_us = next.timestamp_us;
 
                     if (next.type == EVT_PRESS) {
                         press_start_us = next.timestamp_us;
                         gpio_set_level(LED_PIN, 1);
-                        continue;
+                        new_press = true;
+                        break;
                     }
-                    /* Spurious release — ignore */
-                    continue;
-                } else {
-                    /* Word gap expired → add space */
-                    xSemaphoreTake(decode_mutex, portMAX_DELAY);
-                    size_t len = strlen(decoded_msg);
-                    if (len > 0 && len < sizeof(decoded_msg) - 1 &&
-                        decoded_msg[len - 1] != ' ') {
-                        decoded_msg[len] = ' ';
-                        decoded_msg[len + 1] = '\0';
-                    }
-                    xSemaphoreGive(decode_mutex);
+                }
+            }
 
-                    print_msg("  [WORD]");
-                    char buf[280];
-                    snprintf(buf, sizeof(buf), "Message: %s", decoded_msg);
-                    print_msg(buf);
+            if (new_press) continue;
+
+            /* Word gap expired → add space */
+            xSemaphoreTake(decode_mutex, portMAX_DELAY);
+            size_t len = strlen(decoded_msg);
+            if (len > 0 && len < sizeof(decoded_msg) - 1 &&
+                decoded_msg[len - 1] != ' ') {
+                decoded_msg[len] = ' ';
+                decoded_msg[len + 1] = '\0';
+            }
+            xSemaphoreGive(decode_mutex);
+
+            print_msg("  [WORD]");
+            char buf[280];
+            snprintf(buf, sizeof(buf), "Message: %s", decoded_msg);
+            print_msg(buf);
                 }
             }
         }
@@ -331,20 +353,26 @@ static void decode_current(void)
 
     char decoded = morse_to_char(current_morse);
     char buf[280];
+    char local_msg[256];
 
+    xSemaphoreTake(decode_mutex, portMAX_DELAY);
     if (decoded != '?') {
         size_t len = strlen(decoded_msg);
         if (len < sizeof(decoded_msg) - 1) {
             decoded_msg[len] = decoded;
             decoded_msg[len + 1] = '\0';
         }
-        snprintf(buf, sizeof(buf), " → %c | Message: %s", decoded, decoded_msg);
+    }
+    strcpy(local_msg, decoded_msg);
+    current_morse[0] = '\0';
+    xSemaphoreGive(decode_mutex);
+
+    if (decoded != '?') {
+        snprintf(buf, sizeof(buf), " → %c | Message: %s", decoded, local_msg);
     } else {
-        snprintf(buf, sizeof(buf), " → [?] | Message: %s", decoded_msg);
+        snprintf(buf, sizeof(buf), " → [?] | Message: %s", local_msg);
     }
     print_msg(buf);
-
-    current_morse[0] = '\0';
 }
 
 /* ============================================================================
