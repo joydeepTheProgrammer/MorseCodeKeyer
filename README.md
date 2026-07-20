@@ -1,6 +1,3 @@
-Here is the fully synced README. All the examples, timing boundaries, and diagrams have been updated to perfectly match the corrected code.
-
-```markdown
 # Morse Code Keyer
 
 > ESP32-based Morse Code Keyer using native ESP-IDF APIs. Send text as Morse via LED/buzzer, or decode button taps back to text in real time.  
