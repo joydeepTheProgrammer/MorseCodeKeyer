@@ -1,3 +1,6 @@
+Here is the fully synced README. All the examples, timing boundaries, and diagrams have been updated to perfectly match the corrected code.
+
+```markdown
 # Morse Code Keyer
 
 > ESP32-based Morse Code Keyer using native ESP-IDF APIs. Send text as Morse via LED/buzzer, or decode button taps back to text in real time.  
@@ -110,14 +113,14 @@ Type commands in the serial monitor (115200 baud) and press **Enter**:
 ╚══════════════════════════════════════╝
 Commands: wpm=<5-40> | clear | help
 
-> SOS
+SOS
 Sending: SOS
 S=... O=--- S=...  [DONE]
 
-> wpm=20
+wpm=20
 Speed set to 20 WPM
 
-> help
+help
 ┌────── MORSE CHART ──────┐
 │ A=.-      B=-...        │
 │ C=-.-.    D=-..         │
@@ -132,17 +135,17 @@ Tap the button on **GPIO 4** to input Morse:
 | Input | Result |
 |-------|--------|
 | Short tap (< 2× dot) | **Dot** (`.`) |
-| Long tap (> 2× dot) | **Dash** (`-`) |
+| Long tap (≥ 2× dot) | **Dash** (`-`) |
 | Pause (~3× dot) | Auto-decodes letter |
 | Long pause (~7× dot) | Adds word space |
 
 ```
-> .-.-.
- → R | Message: R
-> .-..
- → L | Message: RL
+.-
+ → A | Message: A
+.-
+ → A | Message: AA
   [WORD]
-Message: RL 
+Message: AA 
 ```
 
 ---
@@ -159,8 +162,9 @@ Message: RL
 │  │   Core 0    │    │   Core 1    │    │  GPIO 4     │      │
 │  │             │    │             │    │             │      │
 │  │ Reads serial│    │ Decodes     │◄───│ Edge detect │      │
-│  │ → send Morse│    │ Morse queue │    │ 40ms debounce      │
-│  │             │    │ → text      │    │             │      │
+│  │ → send Morse│    │ Morse queue │    │             │      │
+│  │             │    │ + 40ms      │    │             │      │
+│  │             │    │ debounce    │    │             │      │
 │  └──────┬──────┘    └──────┬──────┘    └─────────────┘      │
 │         │                  │                                │ 
 │         ▼                  ▼                                │
@@ -192,7 +196,7 @@ Derived from `dot_ms = 1200 / WPM`:
 
 ### Button Debounce
 
-Mechanical buttons bounce for 1–20 ms. The ISR timestamps every edge and the task drops events < 40 ms apart. This handles both press and release bounce without external capacitors.
+Mechanical buttons bounce for 1–20 ms. The ISR timestamps every edge and pushes it to a queue. The Button Task drops any events that occur < 40 ms apart. This handles both press and release bounce without external capacitors, preserving the state-machine timeouts for letter and word gaps.
 
 ---
 
@@ -286,7 +290,7 @@ License.
 
 ## MIT License
 
-Copyright (c) 2026 Joydeep Majumdar
+Copyright (c) 2025 Joydeep Majumdar
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
