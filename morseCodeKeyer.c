@@ -262,7 +262,7 @@ static void btn_task(void *pvParameters)
                 uart_write_bytes(UART_PORT, "-", 1);
             }
 
-          process_cmd()
+            /* Wait for letter gap or next press */
             int64_t deadline_us = evt.timestamp_us + (letter_gap_ms * 1000);
             btn_event_t next;
             bool new_press = false;
@@ -341,8 +341,6 @@ static void btn_task(void *pvParameters)
             char buf[280];
             snprintf(buf, sizeof(buf), "Message: %s", decoded_msg);
             print_msg(buf);
-                }
-            }
         }
     }
 }
@@ -436,6 +434,7 @@ static void process_cmd(const char *input)
     if (strcmp(p, "CLEAR") == 0) {
         xSemaphoreTake(decode_mutex, portMAX_DELAY);
         decoded_msg[0] = '\0';
+        current_morse[0] = '\0';
         xSemaphoreGive(decode_mutex);
         print_msg("Decoded message cleared.");
         return;
@@ -462,7 +461,7 @@ static void process_cmd(const char *input)
     for (int i = 0; p[i]; i++) {
         char c = p[i];
         if (c == ' ') {
-            vTaskDelay(pdMS_TO_TICKS(word_gap_ms));
+            vTaskDelay(pdMS_TO_TICKS(word_gap_ms - letter_gap_ms));
             uart_write_bytes(UART_PORT, " / ", 3);
         } else {
             const char *code = char_to_morse(c);
