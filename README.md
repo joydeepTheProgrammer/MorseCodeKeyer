@@ -277,7 +277,7 @@ Pull requests welcome. For major changes, open an issue first to discuss.
 
 ## MIT License
 
-Copyright (c) 2025 Joydeep Majumdar
+Copyright (c) 2026 Joydeep Majumdar
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
